@@ -10,7 +10,7 @@ namespace TestDrive.Models
     {
         public List<Veiculo> Veiculos { get; set; }
 
-        public ListagemVeiculos()   
+        public ListagemVeiculos()
         {
             Veiculos = new List<Veiculo>
             {

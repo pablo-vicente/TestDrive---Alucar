@@ -1,8 +1,9 @@
 ﻿using System;
-using TestDrive.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using TestDrive.Views;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace TestDrive
 {
@@ -17,19 +18,21 @@ namespace TestDrive
 
         protected override void OnStart()
         {
-            MessagingCenter.Subscribe<Usuario>(this, "Sucesso Login", usuario =>
-            {
-                MainPage = new NavigationPage(new ListagemView());
-            });
+            MessagingCenter.Subscribe<Usuario>(this, "SucessoLogin",
+                (usuario) =>
+                {
+                    MainPage = new NavigationPage(new ListagemView());
+                });
         }
 
         protected override void OnSleep()
         {
-            MessagingCenter.Unsubscribe<Usuario>(this, "Sucesso Login");
+            // Handle when your app sleeps
         }
 
         protected override void OnResume()
         {
+            // Handle when your app resumes
         }
     }
 }

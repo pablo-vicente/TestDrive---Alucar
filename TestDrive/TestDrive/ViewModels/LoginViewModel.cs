@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using TestDrive.Models;
 using Xamarin.Forms;
@@ -9,39 +12,66 @@ namespace TestDrive.ViewModels
 {
     public class LoginViewModel : BaseViewModel
     {
-        private string _usuario;
-
-        public string Usuario
-        {
-            get => _usuario;
-            set
-            {
-                _usuario = value;
-                ((Command)EntrarCommand).ChangeCanExecute();
-            }
-        }
-
-        private string _senha;
-
-        public string Senha
-        {
-            get => _senha;
-            set
-            {
-                _senha = value;
-                ((Command)EntrarCommand).ChangeCanExecute();
-            }
-        }
-
         public ICommand EntrarCommand { get; private set; }
 
         public LoginViewModel()
         {
-            EntrarCommand = new Command(() =>
+            EntrarCommand = new Command(
+                async () =>
+                {
+                    try
+                    {
+                        var loginService = new LoginService();
+                        var resultado = await loginService.FazerLogin(new Login(usuario, senha));
+
+                        if (resultado.IsSuccessStatusCode)
+                            MessagingCenter.Send<Usuario>(new Usuario(), "SucessoLogin");
+                        else
+                            MessagingCenter.Send<LoginException>(new LoginException(), "FalhaLogin");
+                    }
+                    catch (Exception exc)
+                    {
+                        MessagingCenter.Send<LoginException>(new
+                            LoginException("Erro de comunicação com o servidor.", exc), "FalhaLogin");
+                    }
+                },
+            () =>
             {
-                MessagingCenter.Send(new Usuario(), "Sucesso Login");
-            }, () => !string.IsNullOrEmpty(_usuario) && !string.IsNullOrEmpty(_senha));
+                return !string.IsNullOrEmpty(usuario)
+                    && !string.IsNullOrEmpty(senha);
+            });
         }
 
+        private string usuario;
+        public string Usuario
+        {
+            get { return usuario; }
+            set
+            {
+                usuario = value;
+                ((Command)EntrarCommand).ChangeCanExecute();
+            }
+        }
+
+        private string senha;
+        public string Senha
+        {
+            get { return senha; }
+            set
+            {
+                senha = value;
+                ((Command)EntrarCommand).ChangeCanExecute();
+            }
+        }
+    }
+
+    public class LoginException : Exception
+    {
+        public LoginException() : base() { }
+
+        public LoginException(string message, Exception innerException) : base(message, innerException)
+        {
+
+        }
     }
 }

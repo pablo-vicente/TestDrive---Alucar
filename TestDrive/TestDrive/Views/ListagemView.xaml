@@ -5,14 +5,12 @@
              xmlns:vm="clr-namespace:TestDrive.ViewModels"
              Title="Test Drive"
              x:Class="TestDrive.Views.ListagemView">
-
-
     <StackLayout Margin="25">
-        <ActivityIndicator IsRunning="{Binding Aguarde}" IsVisible="{Binding Aguarde}">
-
+        <ActivityIndicator IsRunning="{Binding Aguarde}"
+                           IsVisible="{Binding Aguarde}">
         </ActivityIndicator>
-
-        <ListView x:Name="listViewVeiculos" ItemsSource="{Binding Veiculos}" SelectedItem="{Binding VeiculoSelecionado}">
+        <ListView x:Name="listViewVeiculos" ItemsSource="{Binding Veiculos}" 
+                  SelectedItem="{Binding VeiculoSelecionado}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
@@ -27,10 +25,5 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-
-
     </StackLayout>
-
-
-
 </ContentPage>
